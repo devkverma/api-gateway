@@ -13,6 +13,7 @@ dependencies = [
     "fastapi>=0.141.1",
     "psycopg[binary]>=3.3.6",
     "pydantic-settings>=2.15.0",
+    "pysonar>=1.8.0.5390",
     "python-dotenv>=1.2.3",
     "sqlalchemy>=2.0.54",
     "uvicorn>=0.53.0",
@@ -20,6 +21,7 @@ dependencies = [
 
 [project.scripts]
 api-gateway = "api_gateway:main"
+sonar = "api_gateway.sonar:run"
 
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
