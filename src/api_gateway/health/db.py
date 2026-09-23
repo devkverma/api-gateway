@@ -1,0 +1,25 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from api_gateway.database.connection import get_db
+
+db_router = APIRouter()
+
+
+@db_router.get("/db")
+async def database_health(
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        result = await db.execute(text("SELECT 1"))
+
+        return {
+            "status_code": 200,
+            "response" : "Database connected successfully"
+        }
+    except Exception as e:
+        return {
+            "status_code": 500,
+            "error": f"Internal server error: {e}"
+        }
