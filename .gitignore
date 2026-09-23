@@ -17,3 +17,5 @@ versions/
 
 # Sonar
 .sonar/
+coverage.xml
+.coverage
