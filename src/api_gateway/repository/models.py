@@ -36,10 +36,6 @@ class API(Base):
         autoincrement=True,
     )
 
-    # user_id: Mapped[int] = mapped_column(
-        
-    # )
-
     slug: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
