@@ -8,7 +8,7 @@ from api_gateway.config.settings import settings
 
 engine = create_async_engine(
     settings.database_url,
-    echo=True,
+    echo=False,
 )
 
 SessionLocal = async_sessionmaker(

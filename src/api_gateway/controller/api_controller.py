@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -52,7 +53,7 @@ async def list_apis_endpoint(
 )
 async def get_api_endpoint(
     db: DBSession,
-    api_id: int,
+    api_id: UUID,
 ):
     api = await get_api_by_id(db, api_id)
 
@@ -64,6 +65,17 @@ async def get_api_endpoint(
 
     return api
 
+@api_router.get(
+    "/search",
+    response_model=list[APIResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def search_api_endpoint(
+    query: str,
+    db: DBSession,
+):
+    return await search_api(db, query)
+
 
 @api_router.put(
     "/{api_id}",
@@ -72,7 +84,7 @@ async def get_api_endpoint(
 )
 async def update_api_endpoint(
     db: DBSession,
-    api_id: int,
+    api_id: UUID,
     api_data: APICreate,
 ):
     api = await update_api(db, api_id, api_data)
@@ -88,11 +100,11 @@ async def update_api_endpoint(
 
 @api_router.delete(
     "/{api_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_200_OK,
 )
 async def delete_api_endpoint(
     db: DBSession,
-    api_id: int,
+    api_id: UUID,
 ):
     deleted = await delete_api(db, api_id)
 
@@ -101,3 +113,7 @@ async def delete_api_endpoint(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"API with id {api_id} not found",
         )
+
+    return {
+        "message": f"API {api_id} deleted successfully"
+    }
