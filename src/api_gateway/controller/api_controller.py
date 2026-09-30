@@ -9,7 +9,7 @@ from api_gateway.service.api_service import (
     create_api,
     delete_api,
     get_all_apis,
-    get_api_by_id,
+    get_api_by_slug,
     update_api,
 )
 from api_gateway.dto.api_dto import APICreate, APIResponse
@@ -47,20 +47,20 @@ async def list_apis_endpoint(
 
 
 @api_router.get(
-    "/{api_id}",
+    "/{api_slug}",
     response_model=APIResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_api_endpoint(
     db: DBSession,
-    api_id: UUID,
+    api_slug: str,
 ):
-    api = await get_api_by_id(db, api_id)
+    api = await get_api_by_slug(db, api_slug)
 
     if api is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"API with id {api_id} not found",
+            detail=f"API with slug '{api_slug}' not found",
         )
 
     return api

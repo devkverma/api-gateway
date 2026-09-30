@@ -70,6 +70,14 @@ async def get_api_by_id(db: AsyncSession, api_id: UUID):
 
     return result.scalar_one_or_none()
 
+# fetch by slug
+async def get_api_by_slug(db: AsyncSession, api_slug: str):
+    result = await db.execute(
+        select(API).where(API.slug == api_slug)
+    )
+
+    return result.scalar_one_or_none()
+
 # search through api
 async def search_api(db: AsyncSession, query: str):
     search_pattern = f"%{query}%"
