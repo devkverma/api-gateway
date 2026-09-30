@@ -16,7 +16,7 @@ async def create_api(
 
     api = API(
         slug = api_data.slug,
-        base_url = api_data.base_url,
+        base_url= str(api_data.base_url),
         description = api_data.description,
         allowed_methods = api_data.allowed_methods,
     )
@@ -98,7 +98,7 @@ async def update_api(
         return None
     
     api.slug = api_data.slug
-    api.base_url = api_data.base_url
+    api.base_url= str(api_data.base_url)
     api.description = api_data.description
     api.allowed_methods = api_data.allowed_methods
 
