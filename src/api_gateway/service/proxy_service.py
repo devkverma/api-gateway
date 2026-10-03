@@ -1,18 +1,17 @@
-"""
-Resolve upstream API by slug ✅
-Validate requested HTTP method against allowed_methods
-Construct the upstream URL
-Forward query parameters
-Forward request headers/body appropriately
-Call upstream with httpx.AsyncClient
-Return the upstream response
-Handle upstream failures
-timeout → 504 Gateway Timeout
-connection failure → 502 Bad Gateway
-unknown slug → 404
-method not allowed → 405
-Add integration tests for the proxy flow.
-"""
+from api_gateway.repository.models import API
+
+
+HOP_BY_HOP_HEADERS = {
+    "connection",
+    "keep-alive",
+    "proxy-authenticate",
+    "proxy-authorization",
+    "te",
+    "trailer",
+    "transfer-encoding",
+    "upgrade",
+    "host",
+}
 
 def is_method_allowed(api: API, method: str):
     allowed_methods = {
@@ -22,3 +21,19 @@ def is_method_allowed(api: API, method: str):
 
     return method.upper() in allowed_methods
 
+def build_upstream_url(api: API, path: str) -> str:
+    return f"{str(api.base_url).rstrip('/')}/{path.lstrip('/')}"
+
+def build_upstream_headers(headers) -> dict[str, str]:
+    return {
+        key: value
+        for key, value in headers.items()
+        if key.lower() not in HOP_BY_HOP_HEADERS
+    }
+
+def build_downstream_headers(headers) -> dict[str, str]:
+    return {
+        key: value
+        for key, value in headers.items()
+        if key.lower() not in HOP_BY_HOP_HEADERS
+    }
